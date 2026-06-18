@@ -1,0 +1,59 @@
+[tools]
+go = "1.23"
+node = "22"
+
+# --- Run tasks ---
+
+[tasks.dev]
+description = "Run both backend and UI concurrently"
+run = """
+trap 'kill 0' EXIT
+(cd backend && go run ./cmd/server) &
+(cd ui && npm run dev) &
+wait
+"""
+
+[tasks.backend]
+description = "Run the Go backend"
+run = "cd backend && go run ./cmd/server"
+
+[tasks.ui]
+description = "Run the Next.js frontend"
+run = "cd ui && npm run dev"
+
+# --- Setup ---
+
+[tasks.setup]
+description = "Install all dependencies"
+run = """
+cd backend && go mod download
+cd ../ui && npm install
+"""
+
+# --- Build tasks ---
+
+[tasks.build]
+description = "Build both services"
+depends = ["build:backend", "build:ui"]
+
+[tasks."build:backend"]
+description = "Build the Go backend"
+run = "cd backend && go build -o bin/server ./cmd/server"
+
+[tasks."build:ui"]
+description = "Build the Next.js frontend"
+run = "cd ui && npm run build"
+
+# --- Test tasks ---
+
+[tasks.test]
+description = "Run all tests"
+depends = ["test:backend", "test:ui"]
+
+[tasks."test:backend"]
+description = "Run backend tests"
+run = "cd backend && go test ./..."
+
+[tasks."test:ui"]
+description = "Run frontend tests"
+run = "cd ui && npm test"

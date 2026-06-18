@@ -1,3 +1,23 @@
+# Go
+backend/bin/
+backend/vendor/
+
+# Node
+ui/node_modules/
+ui/.next/
+ui/out/
+
+# SQLite
+*.db
+*.db-wal
+*.db-shm
+
+# WhatsApp session
+backend/whatsapp-session.db
+
+# OS
 .DS_Store
-Thumbs.db
-*.swp
+
+# Env
+.env
+.env.local
